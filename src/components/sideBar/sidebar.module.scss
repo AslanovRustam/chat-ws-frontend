@@ -1,0 +1,61 @@
+.aside {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  height: 100%;
+  padding: 2.2rem 0;
+  border-right: 0.01em solid var(--grey-border);
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 0;
+}
+.avatar {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  transition: var(--transitions);
+  &:hover,
+  &:focus {
+    opacity: 0.8;
+  }
+}
+.list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.2rem;
+  margin: 1rem 0;
+  padding: 0 1.8rem;
+}
+.item {
+  padding: 1rem;
+  border-radius: 50%;
+  transition: var(--transitions);
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    background: var(--green-hover);
+    .icon {
+      color: var(--green);
+    }
+  }
+
+  .icon {
+    width: 1.6rem;
+    height: 1.6rem;
+    color: var(--grey-icon);
+  }
+}
+.scrollable {
+  overflow-y: auto;
+  max-height: 100%;
+  width: 100%;
+}

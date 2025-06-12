@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --transitions: all 0.3s ease-in-out;
+  --accent-color: #2b7fff;
+  --black: #333;
+  --black-dark: #171c1b;
+  --black-700: #4d4d4d;
+  --blue-007: #007aff;
+  --white: #fff;
+  --background-grey: #f2f2f2;
+  --grey: #eef1f1;
+  --grey-border: #e3e8e7;
+  --grey-icon: #758a88;
+  --grey-medium: #5d6f6d;
+  --green: #329993;
+  --green-hover: #26736e1a;
+  --red: #d00;
+
+  font-size: 1vw;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+@theme inline {
+}
+* {
+  /* margin: 0; */
+  /* padding: 0; */
+  list-style: none;
+  text-decoration: none;
+  outline: none;
+}
+body {
+  overflow-x: hidden;
+}
+::-webkit-scrollbar {
+  width: 0.2em;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--green);
+  border-radius: 0.4em;
+  transition: all 2s ease-in-out;
+}
+.EmojiPickerReact {
+  display: block !important;
+  visibility: visible !important;
+}

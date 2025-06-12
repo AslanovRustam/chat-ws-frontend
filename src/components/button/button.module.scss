@@ -1,0 +1,59 @@
+.button {
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: auto;
+  cursor: pointer;
+  transition: var(--transitions);
+  border-radius: 999px;
+  border: 1px solid var(--red);
+  color: var(--red);
+
+  .blokText {
+    color: inherit;
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-top: -1px;
+  }
+  .blok {
+    width: 1.4rem;
+    height: 1.4rem;
+    color: inherit;
+  }
+
+  &:hover,
+  &:focus {
+    border-color: transparent;
+    background-color: var(--red);
+    .blokText {
+      color: var(--white);
+    }
+    .blok {
+      color: var(--white);
+    }
+  }
+}
+
+.edit {
+  color: black;
+  border-color: black;
+  padding: 12px 20px;
+  border-radius: 10px;
+}
+.update {
+  color: var(--green);
+  border-color: var(--green);
+  padding: 12px 20px;
+  border-radius: 10px;
+
+  &:hover,
+  &:focus {
+    border-color: transparent;
+    background-color: var(--green-hover);
+    .blokText {
+      color: var(--green);
+    }
+  }
+}

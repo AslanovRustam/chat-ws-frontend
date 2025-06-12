@@ -1,0 +1,24 @@
+.name {
+  color: var(--black-dark);
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+.status {
+  position: relative;
+  overflow: hidden;
+  color: var(--black-700);
+  text-overflow: ellipsis;
+  font-size: 1.1rem;
+  line-height: 1.25rem;
+  &::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background-color: var(--statusColor);
+  }
+}

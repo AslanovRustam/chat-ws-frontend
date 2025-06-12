@@ -1,0 +1,63 @@
+.section {
+  display: flex;
+}
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  border-right: 0.01em solid var(--grey-border);
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.7rem 2.2rem;
+}
+.avatar {
+  width: 3.6rem;
+  height: 3.6rem;
+}
+.userContainer {
+  display: flex;
+  gap: 0.7rem;
+  align-items: center;
+  cursor: pointer;
+}
+.user {
+  text-align: center;
+}
+
+.list {
+  display: flex;
+  align-items: center;
+  gap: 0.076rem;
+}
+.item {
+  padding: 1rem;
+  border-radius: 50%;
+  transition: var(--transitions);
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    background: var(--green-hover);
+    .icon {
+      color: var(--green);
+    }
+  }
+
+  .icon {
+    width: 1.6rem;
+    height: 1.6rem;
+    color: var(--grey-icon);
+    fill: var(--green);
+  }
+
+  .active {
+    background: var(--green-hover);
+    .icon {
+      color: var(--green);
+    }
+  }
+}

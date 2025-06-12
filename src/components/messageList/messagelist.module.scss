@@ -1,0 +1,63 @@
+.messageList {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--grey);
+  padding: 1.4rem 1.4rem 2.8rem 1.4rem;
+  gap: 2.1rem;
+  overflow-y: auto;
+}
+.messageItem {
+  display: flex;
+  gap: 0.8rem;
+  position: relative;
+}
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  span {
+    width: 3.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+  }
+}
+.userAvatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  margin-top: 12px;
+}
+.message {
+  color: var(--black-dark);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.25rem;
+  padding: 1.4rem;
+  max-width: 33.6rem;
+  word-wrap: break-word;
+  .time {
+    position: absolute;
+    bottom: -1.5rem;
+    left: 0;
+    min-width: 4.5rem;
+    color: var(--grey-icon);
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+  .timeCurrentUser {
+    left: auto;
+    right: 0;
+  }
+}
+.currentUser {
+  border-radius: 1.4rem 1.4rem 0px 1.4rem;
+  background: var(--green);
+  color: var(--white);
+}
+.companionUser {
+  border-radius: 1.4rem 1.4rem 1.4rem 0px;
+  background: var(--white);
+}

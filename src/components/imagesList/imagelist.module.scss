@@ -1,0 +1,77 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  padding: 1.7rem 0 0;
+  border-bottom: 0.1rem solid var(--grey-border);
+  //   flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.sectionOpen {
+  padding-bottom: 1.7rem;
+}
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: var(--transitions);
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    .titleText {
+      color: var(--green);
+    }
+    .arrowIcon {
+      color: var(--green);
+    }
+  }
+}
+.titleText {
+  color: var(--black-dark);
+  font-size: 1.1rem;
+  font-weight: 700;
+  transition: var(--transitions);
+}
+.count {
+  color: var(--grey-icon);
+  font-weight: 400;
+  font-size: 1.1rem;
+}
+.arrowIcon {
+  color: var(--grey-icon);
+  width: 1.4rem;
+  height: 1.4rem;
+  transition: var(--transitions);
+  transform: rotate(180deg);
+}
+.arrowOpen {
+  transform: rotate(0deg);
+}
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.4rem;
+  padding-right: 0.4rem;
+  flex: 1;
+  overflow-y: auto;
+  max-height: 0;
+  transition: var(--transitions);
+  &.expanded {
+    max-height: 7rem;
+    overflow-y: auto;
+  }
+}
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.image {
+  width: 6.9rem;
+  height: auto;
+  object-fit: contain;
+}

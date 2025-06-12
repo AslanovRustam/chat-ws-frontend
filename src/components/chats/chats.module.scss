@@ -1,0 +1,29 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow-y: scroll;
+}
+.item {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 1.6rem 1.7rem 1.6em 1em;
+  border-left: 0.4rem solid transparent;
+  border-bottom: 0.2rem solid var(--grey-border);
+  cursor: pointer;
+  transition: var(--transitions);
+
+  &:hover,
+  &:focus {
+    background: var(--green-hover);
+    border-left-color: var(--green);
+    border-bottom-color: transparent;
+  }
+}
+.activeChat {
+  background: var(--green-hover);
+  border-left-color: var(--green);
+  border-bottom-color: transparent;
+}
