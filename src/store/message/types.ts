@@ -11,4 +11,6 @@ export interface IMessage {
   avatar?: string;
   audioUrl?: string;
   videoUrl?: string;
+  fileUrl?: string;
+  fileName?: string;
 }

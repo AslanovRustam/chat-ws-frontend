@@ -1,7 +1,7 @@
 import { createSlice, isPending, isRejected } from "@reduxjs/toolkit";
 import { handlePending, handleRejected } from "@/utils/actionHandlers";
 import { IMessage } from "./types";
-import { getAllChatMessages } from "./asyncOperations";
+import { deleteMessage, getAllChatMessages } from "./asyncOperations";
 import { BaseState } from "../types";
 
 export interface MessagesState extends BaseState {
@@ -31,9 +31,22 @@ export const messageSlice = createSlice({
       state.error = null;
       state.messages = action.payload;
     });
+    builder.addCase(deleteMessage.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = null;
+      state.messages = state.messages.filter(
+        (message) => message.id !== action.payload
+      );
+    });
     // matchers for pending and rejected
-    builder.addMatcher(isPending(getAllChatMessages), handlePending);
-    builder.addMatcher(isRejected(getAllChatMessages), handleRejected);
+    builder.addMatcher(
+      isPending(getAllChatMessages, deleteMessage),
+      handlePending
+    );
+    builder.addMatcher(
+      isRejected(getAllChatMessages, deleteMessage),
+      handleRejected
+    );
   },
 });
 

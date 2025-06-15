@@ -6,27 +6,30 @@ type UseVideoRecorderOptions = {
 
 export const useVideoRecorder = ({ onStop }: UseVideoRecorderOptions) => {
   const [isVideoRecording, setIsVideoRecording] = useState(false);
+  const [stream, setStream] = useState<MediaStream | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 
   const startRecordingVideo = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true,
       });
 
       const chunks: Blob[] = [];
-      const recorder = new MediaRecorder(stream);
+      const recorder = new MediaRecorder(mediaStream);
 
       recorder.ondataavailable = (e) => chunks.push(e.data);
       recorder.onstop = () => {
         const videoBlob = new Blob(chunks, { type: "video/webm" });
         onStop(videoBlob);
-        stream.getTracks().forEach((track) => track.stop());
+        mediaStream.getTracks().forEach((track) => track.stop());
+        setStream(null); // Clear after stop
       };
 
       recorder.start();
       mediaRecorderRef.current = recorder;
+      setStream(mediaStream); // Save for preview
       setIsVideoRecording(true);
     } catch (err) {
       console.error("Error accessing media devices.", err);
@@ -42,5 +45,6 @@ export const useVideoRecorder = ({ onStop }: UseVideoRecorderOptions) => {
     isVideoRecording,
     startRecordingVideo,
     stopRecordingVideo,
+    stream,
   };
 };

@@ -4,7 +4,6 @@ import Image from "next/image";
 import clsx from "clsx";
 // Components
 import MessageList from "../messageList/MessageList";
-// import MessageForm from "../messageForm/MessageForm";
 import MessageFormRender from "../messageForm/MessageFormRender";
 import UserInfo from "../userInfo/UserInfo";
 import UserListTitle from "../userListTitle/UserListTitle";
@@ -85,11 +84,7 @@ function Session() {
           </div>
 
           <MessageList />
-          {/* <MessageForm
-            socketRef={socketRef}
-            user={user}
-            chatId={currentChatId}
-          /> */}
+
           <MessageFormRender
             socketRef={socketRef}
             user={user}

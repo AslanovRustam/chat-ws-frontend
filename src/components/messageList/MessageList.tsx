@@ -6,14 +6,20 @@ import MessageItem from "../messageItem/MessageItem";
 import defaultAvatar from "../../../public/images/avatarDefault.png";
 // Utils
 import { formatDate } from "@/utils/date";
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { selectedMessages, selectUserId } from "@/store/selectors";
+import { deleteMessage } from "@/store/message/asyncOperations";
 // Style
 import s from "./messagelist.module.scss";
 
 function MessageList() {
   const messages = useAppSelector(selectedMessages);
   const userId = useAppSelector(selectUserId);
+  const dispatch = useAppDispatch();
+
+  const handleDeleteMessage = async (messageId: string) => {
+    dispatch(deleteMessage(messageId));
+  };
 
   return (
     <ul className={s.messageList}>
@@ -39,6 +45,15 @@ function MessageList() {
               />
 
               <span>{message.senderName}</span>
+              {userId === message.senderId && (
+                <button
+                  onClick={() => handleDeleteMessage(message.id)}
+                  className={s.deleteButton}
+                  title="Удалить сообщение"
+                >
+                  Delete
+                </button>
+              )}
             </div>
 
             <div

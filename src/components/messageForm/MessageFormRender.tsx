@@ -1,5 +1,5 @@
 "use client";
-import { ChangeEvent, RefObject, useState } from "react";
+import { ChangeEvent, RefObject, useEffect, useRef } from "react";
 import clsx from "clsx";
 import { Socket } from "socket.io-client";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
@@ -7,18 +7,10 @@ import { DefaultEventsMap } from "@socket.io/component-emitter";
 import EmojiPickerCmp from "../emojiPicker/EmojiPicker";
 import RenderButton from "./RenderButton";
 // Utils
-import { useAudioRecorder } from "@/utils/hooks/useAudioRecorder";
-import { useVideoRecorder } from "@/utils/hooks/useVideoRecorder";
-import { instance } from "@/utils/api";
-import { API_ENDPOINTS } from "@/constants/constants";
+import { useMessageForm } from "@/utils/hooks/useMessageForm";
+import { getIconButtons } from "./iconsConfig";
 import { IUser } from "@/types/types";
 // Images
-import Camera from "../../../public/camera.svg";
-import Dots from "../../../public/dots.svg";
-import Microphone from "../../../public/microphone.svg";
-import Emoji from "../../../public/emoji.svg";
-import Attach from "../../../public/attach.svg";
-import Blank from "../../../public/blank.svg";
 import Arrow from "../../../public/arrow.svg";
 // Styles
 import s from "./messageform.module.scss";
@@ -30,117 +22,54 @@ type Props = {
 };
 
 function MessageFormRender({ socketRef, user, chatId }: Props) {
-  const [input, setInput] = useState<string>("");
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const socket = socketRef.current;
+  const {
+    input,
+    setInput,
+    showEmojiPicker,
+    setShowEmojiPicker,
+    isRecording,
+    startRecording,
+    stopRecording,
+    isVideoRecording,
+    startRecordingVideo,
+    stopRecordingVideo,
+    videoStream,
+    fileInputRef,
+    handleFileUpload,
+    sendMessage,
+  } = useMessageForm(user, chatId, socketRef);
 
-  const sendVoiceMessage = async (blob: Blob): Promise<void> => {
-    if (!user || !chatId) return;
+  const videoPreviewRef = useRef<HTMLVideoElement>(null);
 
-    const formData = new FormData();
-    formData.append("file", blob, "voice.webm");
-    formData.append("chatId", chatId);
-    formData.append("senderId", String(user.id));
-    formData.append("senderName", String(user.username));
-
-    try {
-      const response = await instance.post(
-        API_ENDPOINTS.voiceMessage,
-        formData
-      );
-
-      socket?.emit("sendMessage", response.data);
-    } catch (error) {
-      console.error("Failed to send voice message:", error);
+  useEffect(() => {
+    if (videoPreviewRef.current && videoStream) {
+      videoPreviewRef.current.srcObject = videoStream;
     }
-  };
+  }, [videoStream]);
 
-  const sendVideoMessage = async (blob: Blob): Promise<void> => {
-    if (!user || !chatId) return;
+  const handleMicClick = () =>
+    isRecording ? stopRecording() : startRecording();
 
-    const formData = new FormData();
-    formData.append("file", blob, "video.webm");
-    formData.append("chatId", chatId);
-    formData.append("senderId", String(user.id));
-    formData.append("senderName", String(user.username));
+  const handleVideoClick = () =>
+    isVideoRecording ? stopRecordingVideo() : startRecordingVideo();
 
-    try {
-      const response = await instance.post(
-        API_ENDPOINTS.videoMessage,
-        formData
-      );
+  const handleEmojiClick = () => setShowEmojiPicker((prev) => !prev);
 
-      socket?.emit("sendMessage", response.data);
-    } catch (error) {
-      console.error("Failed to send video message:", error);
-    }
-  };
+  const handleFileChooseClick = () => fileInputRef.current?.click();
 
-  const { isRecording, startRecording, stopRecording } =
-    useAudioRecorder(sendVoiceMessage);
-
-  const { isVideoRecording, startRecordingVideo, stopRecordingVideo } =
-    useVideoRecorder({
-      onStop: (blob) => {
-        sendVideoMessage(blob);
-      },
-    });
-
-  const sendMessage = async (): Promise<void> => {
-    if (!user || !chatId || !input.trim()) return;
-
-    try {
-      await instance.post(API_ENDPOINTS.createMessage, {
-        chatId,
-        senderId: user.id,
-        senderName: user.username,
-        text: input,
-      });
-
-      socket?.emit("sendMessage", {
-        chatId,
-        senderId: user.id,
-        senderName: user.username,
-        text: input,
-      });
-    } catch (error) {
-      console.error("Failed to send message:", error);
-    }
-
-    setInput("");
-  };
+  const iconButtons = getIconButtons(
+    handleVideoClick,
+    isVideoRecording,
+    handleMicClick,
+    isRecording,
+    handleEmojiClick,
+    handleFileChooseClick
+  );
 
   const handleSetInput = (e: ChangeEvent<HTMLTextAreaElement>): void => {
     const { value } = e.target;
     setInput(value);
   };
-
-  const handleSubmit = (): void => {
-    sendMessage();
-  };
-
-  const handleMicClick = () => {
-    isRecording ? stopRecording() : startRecording();
-  };
-
-  const handleEmojiClick = () => {
-    setShowEmojiPicker((prev) => !prev);
-  };
-
-  const handleVideoClick = () => {
-    isVideoRecording ? stopRecordingVideo() : startRecordingVideo();
-  };
-
-  const iconButtons = [
-    { Icon: Camera, onClick: handleVideoClick, isRecording: isVideoRecording },
-    { Icon: Microphone, onClick: handleMicClick, isRecording: isRecording },
-    "divider",
-    { Icon: Emoji, onClick: handleEmojiClick },
-    { Icon: Attach, onClick: undefined },
-    { Icon: Blank, onClick: undefined },
-    "divider",
-    { Icon: Dots, onClick: undefined, extraClass: "rotate-90" },
-  ];
 
   return (
     <div className={s.container}>
@@ -169,6 +98,13 @@ function MessageFormRender({ socketRef, user, chatId }: Props) {
               )
             )}
           </ul>
+          <input
+            type="file"
+            hidden
+            style={{ display: "none" }}
+            ref={fileInputRef}
+            onChange={handleFileUpload}
+          />
           <button
             type="button"
             className={clsx(s.button, {
@@ -179,17 +115,30 @@ function MessageFormRender({ socketRef, user, chatId }: Props) {
                 ? handleMicClick
                 : isVideoRecording
                 ? handleVideoClick
-                : handleSubmit
+                : sendMessage
             }
           >
             <Arrow className={s.icon} />
           </button>
         </div>
+
         {showEmojiPicker && (
           <EmojiPickerCmp
             setInput={setInput}
             onClickOutside={() => setShowEmojiPicker(false)}
           />
+        )}
+
+        {isVideoRecording && videoStream && (
+          <div className={s.videoPreviewWrapper}>
+            <video
+              ref={videoPreviewRef}
+              className={s.videoPreview}
+              autoPlay
+              muted
+              playsInline
+            />
+          </div>
         )}
       </div>
     </div>

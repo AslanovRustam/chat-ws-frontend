@@ -17,6 +17,7 @@ import s from "./user.module.scss";
 function UserCmp() {
   const dispatch = useAppDispatch<AppDispatch>();
   const user = useAppSelector(selectUser);
+
   const [credentials, setCredentials] = useState<IUser>({
     email: user?.email || "",
     password: user?.password || "",

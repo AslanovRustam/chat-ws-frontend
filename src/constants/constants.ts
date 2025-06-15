@@ -19,6 +19,7 @@ export const API_ENDPOINTS = {
   createMessage: "/message",
   voiceMessage: "/message/voice",
   videoMessage: "/message/video",
+  fileMessage: "/message/file",
 };
 
 export const STATUS = {
