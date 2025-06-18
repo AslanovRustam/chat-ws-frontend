@@ -14,9 +14,3 @@ export interface IUserForChat {
   avatar: string | StaticImageData;
   type?: "chat" | "info";
 }
-
-export interface IFile {
-  id: string;
-  name: string;
-  icon: string;
-}

@@ -52,7 +52,6 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
   gap: 1rem;
   margin-top: 1.4rem;
   padding-right: 0.4rem;
@@ -69,9 +68,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 6rem;
+
+  &:last-child {
+    margin-right: auto;
+  }
 }
 .image {
-  width: 6.9rem;
   height: auto;
   object-fit: contain;
+  border-radius: 0.5rem;
 }

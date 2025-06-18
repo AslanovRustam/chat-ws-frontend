@@ -11,3 +11,5 @@ export const selectisUserAuthenticated = (state: RootState) =>
 export const selectUserChats = (state: RootState) => state.chat.chats;
 export const selectedChatId = (state: RootState) => state.chat.selectedChatId;
 export const selectedMessages = (state: RootState) => state.message.messages;
+export const selectParticipants = (state: RootState) =>
+  state.chat.selectedChatParticipants;

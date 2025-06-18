@@ -20,8 +20,8 @@ export const sendTextMessage = async ({
     text: input,
   };
 
-  await instance.post(API_ENDPOINTS.createMessage, payload);
-  socket?.emit("sendMessage", payload);
+  const response = await instance.post(API_ENDPOINTS.createMessage, payload);
+  socket?.emit("sendMessage", response.data);
 };
 
 export const sendVoiceMessage = async (

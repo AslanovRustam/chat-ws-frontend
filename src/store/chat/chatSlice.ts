@@ -1,13 +1,15 @@
 import { createSlice, isPending, isRejected } from "@reduxjs/toolkit";
 import { handlePending, handleRejected } from "@/utils/actionHandlers";
-import { getAllChats, getUserChats } from "./asyncOperations";
+import { getAllChats, getParticipants, getUserChats } from "./asyncOperations";
 import { IChat } from "./types";
 import { BaseState } from "../types";
 import { IMessage } from "../message/types";
+import { IUser } from "@/types/types";
 
 export interface ChatState extends BaseState {
   chats: { chat: IChat; lastMessage: IMessage }[];
   selectedChatId: string | null;
+  selectedChatParticipants: Partial<IUser>[] | null;
 }
 
 const initialState: ChatState = {
@@ -15,6 +17,7 @@ const initialState: ChatState = {
   error: null,
   chats: [],
   selectedChatId: null,
+  selectedChatParticipants: null,
 };
 
 export const chatSlice = createSlice({
@@ -36,9 +39,20 @@ export const chatSlice = createSlice({
       state.error = null;
       state.chats = action.payload;
     });
+    builder.addCase(getParticipants.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = null;
+      state.selectedChatParticipants = action.payload;
+    });
     // matchers for pending and rejected
-    builder.addMatcher(isPending(getUserChats, getAllChats), handlePending);
-    builder.addMatcher(isRejected(getUserChats, getAllChats), handleRejected);
+    builder.addMatcher(
+      isPending(getUserChats, getAllChats, getParticipants),
+      handlePending
+    );
+    builder.addMatcher(
+      isRejected(getUserChats, getAllChats, getParticipants),
+      handleRejected
+    );
   },
 });
 

@@ -9,7 +9,7 @@ import Dots from "../../../public/dots.svg";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { selectedChatId, selectUserChats } from "@/store/selectors";
 import { setSelectedChatId } from "@/store/chat/chatSlice";
-import { getAllChats, getUserChats } from "@/store/chat/asyncOperations";
+import { getAllChats, getParticipants } from "@/store/chat/asyncOperations";
 import { getAllChatMessages } from "@/store/message/asyncOperations";
 // Styles
 import s from "./messages.module.scss";
@@ -23,6 +23,7 @@ function Messages() {
     dispatch(setSelectedChatId(chatId));
     dispatch(getAllChats());
     dispatch(getAllChatMessages(chatId));
+    dispatch(getParticipants(chatId));
   };
 
   useEffect(() => {

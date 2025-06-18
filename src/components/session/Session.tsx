@@ -23,6 +23,7 @@ import s from "./session.module.scss";
 
 function Session() {
   const [showUserInfo, setShowUserInfo] = useState<boolean>(false);
+  const [selectedUserId, setSelecteduserId] = useState<string>("");
   const socketRef = useSocket();
   const currentChatId = useAppSelector(selectedChatId);
   const user = useAppSelector(selectUser);
@@ -30,8 +31,17 @@ function Session() {
   const userId = user?.id;
 
   const dispatch = useAppDispatch();
+
   const toggleUserInfo = (): void => {
     setShowUserInfo(!showUserInfo);
+  };
+
+  const openUserInfo = (): void => {
+    setShowUserInfo(true);
+  };
+
+  const handleSelectUser = (id: string) => {
+    setSelecteduserId(id);
   };
 
   useEffect(() => {
@@ -55,7 +65,7 @@ function Session() {
   if (!currentChatId) return;
 
   return (
-    <section className="ml-[25rem] flex w-[67.5vw] ">
+    <section className="ml-[20rem] flex w-[72.5vw] ">
       <section
         className={clsx(
           s.section,
@@ -64,7 +74,7 @@ function Session() {
       >
         <div className={s.wrapper}>
           <div className={s.header}>
-            <div className={s.userContainer} onClick={toggleUserInfo}>
+            <div className={s.userContainer}>
               <Image src={avatar} alt="avatar" className={s.avatar} />
               <div className={s.user}>
                 <UserListTitle />
@@ -83,7 +93,10 @@ function Session() {
             </ul>
           </div>
 
-          <MessageList />
+          <MessageList
+            toggleUserInfo={openUserInfo}
+            handleSelectUser={handleSelectUser}
+          />
 
           <MessageFormRender
             socketRef={socketRef}
@@ -94,10 +107,10 @@ function Session() {
         <div
           className={clsx(
             "transition-all duration-300 ease-in-out overflow-hidden flex flex-col",
-            showUserInfo ? "translate-x-0 w-[66%]" : "translate-x-full w-0"
+            showUserInfo ? "translate-x-0 w-[50%]" : "translate-x-full w-0"
           )}
         >
-          <UserInfo close={toggleUserInfo} />
+          <UserInfo close={toggleUserInfo} selectedUserId={selectedUserId} />
         </div>
       </section>
     </section>

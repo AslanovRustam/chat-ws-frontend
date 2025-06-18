@@ -12,3 +12,9 @@ export interface IChat {
 }
 
 export type ChatWithLastMessage = { chat: IChat; lastMessage: IMessage };
+
+export interface IParticipant {
+  id: string;
+  username: string;
+  email: string;
+}

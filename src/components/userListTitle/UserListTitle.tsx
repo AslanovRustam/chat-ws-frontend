@@ -1,25 +1,24 @@
 import { CSSProperties } from "react";
+// Utils
 import { STATUS } from "@/constants/constants";
 import { useAppSelector } from "@/store/hooks";
-import { selectedChatId, selectUserChats } from "@/store/selectors";
+import { selectParticipants } from "@/store/selectors";
+// Styles
 import s from "./userListTitle.module.scss";
 
 type Props = { status?: string };
 
 function UserListTitle({ status = STATUS.active }: Props) {
-  const selectedChat = useAppSelector(selectedChatId);
-  const chats = useAppSelector(selectUserChats);
+  const participants = useAppSelector(selectParticipants);
 
-  const participantsLength =
-    chats?.find((chat) => chat.chat.id === selectedChat)?.chat.participants
-      .length ?? 0;
+  const participantsNames = participants?.map(
+    (participant) => participant.username
+  );
 
   return (
     <>
       <div className={s.name}>
-        <span>
-          {`${participantsLength} users in chat` || "No users in chat"}
-        </span>
+        <span>{participantsNames?.join(", ")}</span>
       </div>
       <p
         className={s.status}

@@ -1,9 +1,11 @@
-import clsx from "clsx";
+import { useState } from "react";
 import Image from "next/image";
+import clsx from "clsx";
 // Components
 import MessageItem from "../messageItem/MessageItem";
 // Images
 import defaultAvatar from "../../../public/images/avatarDefault.png";
+import Delete from "../../../public/deny.svg";
 // Utils
 import { formatDate } from "@/utils/date";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -12,13 +14,31 @@ import { deleteMessage } from "@/store/message/asyncOperations";
 // Style
 import s from "./messagelist.module.scss";
 
-function MessageList() {
+interface MessageListProps {
+  toggleUserInfo: () => void;
+  handleSelectUser: (id: string) => void;
+}
+
+function MessageList({ toggleUserInfo, handleSelectUser }: MessageListProps) {
+  const [selectedMessageId, setSelectedMessageId] = useState<string | null>(
+    null
+  );
   const messages = useAppSelector(selectedMessages);
   const userId = useAppSelector(selectUserId);
   const dispatch = useAppDispatch();
 
   const handleDeleteMessage = async (messageId: string) => {
     dispatch(deleteMessage(messageId));
+    setSelectedMessageId(null);
+  };
+
+  const toggleDeleteButton = (messageId: string) => {
+    setSelectedMessageId((prev) => (prev === messageId ? null : messageId));
+  };
+
+  const handleUserClick = (id: string) => {
+    handleSelectUser(id);
+    toggleUserInfo();
   };
 
   return (
@@ -37,6 +57,7 @@ function MessageList() {
                 s.userInfo,
                 userId === message.senderId && "order-1"
               )}
+              onClick={() => handleUserClick(message.senderId)}
             >
               <Image
                 src={message?.avatar || defaultAvatar}
@@ -45,15 +66,6 @@ function MessageList() {
               />
 
               <span>{message.senderName}</span>
-              {userId === message.senderId && (
-                <button
-                  onClick={() => handleDeleteMessage(message.id)}
-                  className={s.deleteButton}
-                  title="Удалить сообщение"
-                >
-                  Delete
-                </button>
-              )}
             </div>
 
             <div
@@ -61,6 +73,7 @@ function MessageList() {
                 s.message,
                 userId === message.senderId ? s.currentUser : s.companionUser
               )}
+              onClick={() => toggleDeleteButton(message.id)}
             >
               <MessageItem message={message} />
 
@@ -72,6 +85,24 @@ function MessageList() {
               >
                 {formatDate(message?.createdAt || "")}
               </span>
+
+              {selectedMessageId === message.id && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteMessage(message.id);
+                  }}
+                  className={clsx(
+                    s.deleteButton,
+                    userId === message.senderId
+                      ? s.deleteButtonCurrentUser
+                      : s.deleteButtoncompanion
+                  )}
+                  title="Delete message"
+                >
+                  <Delete className={s.deleteIcon} />
+                </button>
+              )}
             </div>
           </li>
         ))}
@@ -80,3 +111,4 @@ function MessageList() {
 }
 
 export default MessageList;
+// userId === message.senderId &&
