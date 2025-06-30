@@ -14,6 +14,7 @@ import { IUser } from "@/types/types";
 import Arrow from "../../../public/arrow.svg";
 // Styles
 import s from "./messageform.module.scss";
+import Loader from "../loader/Loader";
 
 type Props = {
   socketRef: RefObject<Socket<DefaultEventsMap, DefaultEventsMap> | null>;
@@ -37,6 +38,8 @@ function MessageFormRender({ socketRef, user, chatId }: Props) {
     fileInputRef,
     handleFileUpload,
     sendMessage,
+    loading,
+    error,
   } = useMessageForm(user, chatId, socketRef);
 
   const videoPreviewRef = useRef<HTMLVideoElement>(null);
@@ -117,8 +120,9 @@ function MessageFormRender({ socketRef, user, chatId }: Props) {
                 ? handleVideoClick
                 : sendMessage
             }
+            disabled={loading}
           >
-            <Arrow className={s.icon} />
+            {loading ? <Loader size={20} /> : <Arrow className={s.icon} />}
           </button>
         </div>
 

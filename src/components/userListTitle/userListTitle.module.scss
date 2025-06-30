@@ -1,7 +1,13 @@
 .name {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   color: var(--black-dark);
   font-size: 1.4rem;
   font-weight: 700;
+  li button {
+    cursor: pointer;
+  }
 }
 .status {
   position: relative;
