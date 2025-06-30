@@ -13,3 +13,4 @@ export const selectedChatId = (state: RootState) => state.chat.selectedChatId;
 export const selectedMessages = (state: RootState) => state.message.messages;
 export const selectParticipants = (state: RootState) =>
   state.chat.selectedChatParticipants;
+export const selectLocalStream = (state: RootState) => state.stream.localStream;

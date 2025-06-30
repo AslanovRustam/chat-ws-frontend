@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 
 const SOCKET_URL =
@@ -6,6 +6,7 @@ const SOCKET_URL =
 
 export const useSocket = () => {
   const socketRef = useRef<Socket | null>(null);
+  const [isSocketConnected, setIsSocketConnected] = useState<boolean>(false);
 
   useEffect(() => {
     const socket = io(SOCKET_URL, {
@@ -17,10 +18,12 @@ export const useSocket = () => {
 
     socket.on("connect", () => {
       console.log("🔌 Socket connected:", socket.id);
+      setIsSocketConnected(true);
     });
 
     socket.on("disconnect", () => {
       console.log("❌ Socket disconnected");
+      setIsSocketConnected(false);
     });
 
     return () => {
@@ -28,5 +31,5 @@ export const useSocket = () => {
     };
   }, []);
 
-  return socketRef;
+  return { socketRef, isSocketConnected };
 };

@@ -16,25 +16,51 @@ export const useMessageForm = (
 ) => {
   const [input, setInput] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const sendMessage = async () => {
     if (user && chatId && input.trim()) {
-      await sendTextMessage({ input, chatId, user, socket: socket.current });
-      setInput("");
+      setLoading(true);
+      setError(null);
+      try {
+        await sendTextMessage({ input, chatId, user, socket: socket.current });
+        setInput("");
+      } catch (error: any) {
+        setError(error?.message || "Error sending message");
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
   const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     if (!user || !chatId || !e.target.files?.[0]) return;
-    await sendFileMessage(e.target.files[0], chatId, user, socket.current);
-    e.target.value = "";
+    setLoading(true);
+    setError(null);
+    try {
+      await sendFileMessage(e.target.files[0], chatId, user, socket.current);
+    } catch (error: any) {
+      setError(error?.message || "Error sending message");
+    } finally {
+      setLoading(false);
+      e.target.value = "";
+    }
   };
 
   const { isRecording, startRecording, stopRecording } = useAudioRecorder(
     async (blob) => {
-      if (chatId && user)
-        await sendVoiceMessage(blob, chatId, user, socket.current);
+      if (!chatId && !user) return;
+      setLoading(true);
+      setError(null);
+      try {
+        await sendVoiceMessage(blob, chatId!, user!, socket.current);
+      } catch (error: any) {
+        setError(error?.message || "Error sending message");
+      } finally {
+        setLoading(false);
+      }
     }
   );
 
@@ -45,8 +71,16 @@ export const useMessageForm = (
     stream: videoStream,
   } = useVideoRecorder({
     onStop: async (blob) => {
-      if (chatId && user)
+      if (!chatId || !user) return;
+      setLoading(true);
+      setError(null);
+      try {
         await sendVideoMessage(blob, chatId, user, socket.current);
+      } catch (err: any) {
+        setError(err?.message || "Error sending message");
+      } finally {
+        setLoading(false);
+      }
     },
   });
 
@@ -65,5 +99,7 @@ export const useMessageForm = (
     fileInputRef,
     handleFileUpload,
     sendMessage,
+    loading,
+    error,
   };
 };

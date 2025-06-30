@@ -13,6 +13,7 @@ import storage from "redux-persist/lib/storage";
 import userReducer from "./user/userSlice";
 import chatReducer from "./chat/chatSlice";
 import messageReducer from "./message/messageSlice";
+import streamReducer from "./stream/streamSlice";
 
 const persistConfig = {
   key: "user",
@@ -27,6 +28,7 @@ export const makeStore = () => {
       user: persistedReducer,
       chat: chatReducer,
       message: messageReducer,
+      stream: streamReducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({

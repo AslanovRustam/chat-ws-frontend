@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import clsx from "clsx";
 // Components
@@ -41,6 +41,17 @@ function MessageList({ toggleUserInfo, handleSelectUser }: MessageListProps) {
     toggleUserInfo();
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!(event.target as HTMLElement).closest(`.${s.message}`)) {
+        setSelectedMessageId(null);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
+
   return (
     <ul className={s.messageList}>
       {messages.length > 0 &&
@@ -73,7 +84,11 @@ function MessageList({ toggleUserInfo, handleSelectUser }: MessageListProps) {
                 s.message,
                 userId === message.senderId ? s.currentUser : s.companionUser
               )}
-              onClick={() => toggleDeleteButton(message.id)}
+              onClick={(e) => {
+                if (e.target === e.currentTarget) {
+                  toggleDeleteButton(message.id);
+                }
+              }}
             >
               <MessageItem message={message} />
 
@@ -111,4 +126,3 @@ function MessageList({ toggleUserInfo, handleSelectUser }: MessageListProps) {
 }
 
 export default MessageList;
-// userId === message.senderId &&
